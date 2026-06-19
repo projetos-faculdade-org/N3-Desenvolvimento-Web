@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficina Mecânica</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { text-align: center; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #e94560; }
+        p { color: #aaa; margin-bottom: 2.5rem; font-size: 1.1rem; }
+        .cards { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
+        .card { background: #16213e; border: 2px solid #e94560; border-radius: 12px; padding: 2rem 3rem; text-decoration: none; color: #eee; transition: transform .2s, box-shadow .2s; }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(233,69,96,.4); }
+        .card .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .card h2 { font-size: 1.4rem; }
+        .creds { margin-top: 2.5rem; display: inline-block; background: #16213e; border: 1px solid #0f3460; border-radius: 10px; padding: 1rem 1.5rem; color: #aaa; font-size: .95rem; }
+        .creds strong { color: #e94560; }
+        .creds code { background: #0f3460; color: #eee; padding: .15rem .5rem; border-radius: 5px; font-size: .9rem; }
+        .creds .hint { display: block; margin-top: .6rem; font-size: .8rem; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Oficina Mecânica</h1>
+        <p>Sistema de Gerenciamento de Clientes e Ordens de Serviço</p>
+        <div class="cards">
+            <a href="/clientes.html" class="card">
+                <div class="icon">👤</div>
+                <h2>Clientes</h2>
+            </a>
+            <a href="/ordens.html" class="card">
+                <div class="icon">🔧</div>
+                <h2>Ordens de Serviço</h2>
+            </a>
+            <a href="/swagger-ui.html" class="card" target="_blank">
+                <div class="icon">📄</div>
+                <h2>API Docs</h2>
+            </a>
+            <a href="http://localhost:3000" class="card" target="_blank">
+                <div class="icon">📊</div>
+                <h2>Grafana</h2>
+            </a>
+        </div>
+        <div class="creds">
+            Credenciais do <strong>Grafana</strong>: usuário <code>admin</code> · senha <code>admin</code>
+        </div>
+    </div>
+</body>
+</html>

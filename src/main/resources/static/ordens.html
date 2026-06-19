@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordens de Serviço - Oficina Mecânica</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+
+        header { background: #16213e; padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; border-bottom: 2px solid #e94560; }
+        header a { color: #e94560; text-decoration: none; font-size: 1.4rem; }
+        header h1 { font-size: 1.4rem; color: #eee; }
+
+        .content { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+
+        .card { background: #16213e; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #0f3460; }
+        .card h2 { margin-bottom: 1rem; color: #e94560; font-size: 1.1rem; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        label { display: block; font-size: .85rem; color: #aaa; margin-bottom: .3rem; }
+        input, select, textarea { width: 100%; padding: .6rem .8rem; border-radius: 6px; border: 1px solid #0f3460; background: #0f3460; color: #eee; font-size: .95rem; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #e94560; }
+        select option { background: #0f3460; }
+        textarea { resize: vertical; min-height: 70px; }
+
+        .btn-row { margin-top: 1rem; display: flex; gap: .8rem; flex-wrap: wrap; }
+        button { padding: .6rem 1.4rem; border: none; border-radius: 6px; cursor: pointer; font-size: .9rem; font-weight: 600; transition: opacity .2s; }
+        button:hover { opacity: .85; }
+        .btn-primary   { background: #e94560; color: #fff; }
+        .btn-secondary { background: #0f3460; color: #eee; }
+        .btn-danger    { background: #c0392b; color: #fff; }
+        .btn-warning   { background: #e67e22; color: #fff; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: .75rem 1rem; text-align: left; border-bottom: 1px solid #0f3460; font-size: .85rem; }
+        th { color: #e94560; font-weight: 600; background: #0f3460; }
+        tr:hover { background: #0f3460; }
+        td .actions { display: flex; gap: .5rem; }
+
+        .badge { padding: .2rem .6rem; border-radius: 20px; font-size: .75rem; font-weight: 700; }
+        .badge-aberto      { background: #1a5276; color: #5dade2; }
+        .badge-andamento   { background: #7d6608; color: #f9e79f; }
+        .badge-finalizado  { background: #1e8449; color: #a9dfbf; }
+
+        .msg { padding: .8rem 1rem; border-radius: 6px; margin-bottom: 1rem; display: none; }
+        .msg.success { background: #1a472a; color: #a9dfbf; display: block; }
+        .msg.error   { background: #641e16; color: #f1948a; display: block; }
+
+        .filter-row { display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
+        .filter-row > div { flex: 1; min-width: 160px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="/">&#8592;</a>
+    <h1>Ordens de Serviço</h1>
+</header>
+
+<div class="content">
+
+    <div id="msg" class="msg"></div>
+
+    <div class="card">
+        <h2 id="form-title">Nova Ordem de Serviço</h2>
+        <input type="hidden" id="ordemId">
+        <div class="form-grid">
+            <div>
+                <label>Cliente *</label>
+                <select id="clienteId">
+                    <option value="">Selecione um cliente...</option>
+                </select>
+            </div>
+            <div>
+                <label>Veículo *</label>
+                <input type="text" id="veiculo" placeholder="Ex: Honda Civic 2020">
+            </div>
+            <div style="grid-column: span 2">
+                <label>Problema *</label>
+                <textarea id="problema" placeholder="Descreva o problema relatado pelo cliente"></textarea>
+            </div>
+            <div>
+                <label>Status *</label>
+                <select id="status">
+                    <option value="ABERTO">Aberto</option>
+                    <option value="EM_ANDAMENTO">Em Andamento</option>
+                    <option value="FINALIZADO">Finalizado</option>
+                </select>
+            </div>
+            <div>
+                <label>Valor (R$) *</label>
+                <input type="number" id="valor" placeholder="0.00" min="0" step="0.01">
+            </div>
+        </div>
+        <div class="btn-row">
+            <button class="btn-primary" onclick="salvar()">Salvar</button>
+            <button class="btn-secondary" onclick="limparForm()">Limpar</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Ordens Cadastradas</h2>
+        <div class="filter-row" style="margin-bottom:1rem">
+            <div>
+                <label>Filtrar por status</label>
+                <select id="filtroStatus" onchange="filtrarOuListar()">
+                    <option value="">Todos</option>
+                    <option value="ABERTO">Aberto</option>
+                    <option value="EM_ANDAMENTO">Em Andamento</option>
+                    <option value="FINALIZADO">Finalizado</option>
+                </select>
+            </div>
+        </div>
+        <div style="overflow-x:auto">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Veículo</th>
+                        <th>Problema</th>
+                        <th>Status</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_ORDENS   = '/ordens';
+    const API_CLIENTES = '/clientes';
+
+    async function carregarClientes() {
+        const res = await fetch(API_CLIENTES);
+        const clientes = await res.json();
+        const sel = document.getElementById('clienteId');
+        clientes.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = `${c.nome} (${c.cpf})`;
+            sel.appendChild(opt);
+        });
+    }
+
+    async function filtrarOuListar() {
+        const status = document.getElementById('filtroStatus').value;
+        const url = status ? `${API_ORDENS}/status/${status}` : API_ORDENS;
+        const res = await fetch(url);
+        const ordens = await res.json();
+        renderTabela(ordens);
+    }
+
+    function renderTabela(ordens) {
+        const tbody = document.getElementById('tabela-body');
+        tbody.innerHTML = '';
+        if (ordens.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#aaa">Nenhuma ordem encontrada</td></tr>';
+            return;
+        }
+        ordens.forEach(o => {
+            const badgeClass = {
+                ABERTO: 'badge-aberto',
+                EM_ANDAMENTO: 'badge-andamento',
+                FINALIZADO: 'badge-finalizado'
+            }[o.status] || '';
+            const statusLabel = {
+                ABERTO: 'Aberto',
+                EM_ANDAMENTO: 'Em Andamento',
+                FINALIZADO: 'Finalizado'
+            }[o.status] || o.status;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${o.id}</td>
+                    <td>${o.cliente.nome}</td>
+                    <td>${o.veiculo}</td>
+                    <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${o.problema}">${o.problema}</td>
+                    <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+                    <td>R$ ${parseFloat(o.valor).toFixed(2).replace('.', ',')}</td>
+                    <td class="actions">
+                        <button class="btn-warning" onclick="editar(${o.id})">Editar</button>
+                        <button class="btn-danger"  onclick="deletar(${o.id})">Excluir</button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    async function salvar() {
+        const id = document.getElementById('ordemId').value;
+        const body = {
+            clienteId: parseInt(document.getElementById('clienteId').value),
+            veiculo:   document.getElementById('veiculo').value.trim(),
+            problema:  document.getElementById('problema').value.trim(),
+            status:    document.getElementById('status').value,
+            valor:     parseFloat(document.getElementById('valor').value)
+        };
+
+        if (!body.clienteId || !body.veiculo || !body.problema || isNaN(body.valor)) {
+            mostrarMsg('Preencha todos os campos obrigatórios.', 'error');
+            return;
+        }
+
+        const method = id ? 'PUT' : 'POST';
+        const url    = id ? `${API_ORDENS}/${id}` : API_ORDENS;
+
+        const res = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+            mostrarMsg(id ? 'Ordem atualizada com sucesso!' : 'Ordem criada com sucesso!', 'success');
+            limparForm();
+            filtrarOuListar();
+        } else {
+            const err = await res.json().catch(() => ({}));
+            mostrarMsg('Erro: ' + (err.message || res.statusText), 'error');
+        }
+    }
+
+    async function editar(id) {
+        const res = await fetch(`${API_ORDENS}/${id}`);
+        const o = await res.json();
+        document.getElementById('ordemId').value   = o.id;
+        document.getElementById('clienteId').value = o.cliente.id;
+        document.getElementById('veiculo').value   = o.veiculo;
+        document.getElementById('problema').value  = o.problema;
+        document.getElementById('status').value    = o.status;
+        document.getElementById('valor').value     = o.valor;
+        document.getElementById('form-title').textContent = 'Editar Ordem de Serviço';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deletar(id) {
+        if (!confirm('Deseja excluir esta ordem de serviço?')) return;
+        const res = await fetch(`${API_ORDENS}/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            mostrarMsg('Ordem excluída.', 'success');
+            filtrarOuListar();
+        } else {
+            mostrarMsg('Erro ao excluir ordem.', 'error');
+        }
+    }
+
+    function limparForm() {
+        ['ordemId','veiculo','problema','valor'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('clienteId').value = '';
+        document.getElementById('status').value    = 'ABERTO';
+        document.getElementById('form-title').textContent = 'Nova Ordem de Serviço';
+    }
+
+    function mostrarMsg(texto, tipo) {
+        const el = document.getElementById('msg');
+        el.textContent = texto;
+        el.className = `msg ${tipo}`;
+        setTimeout(() => { el.className = 'msg'; }, 4000);
+    }
+
+    carregarClientes();
+    filtrarOuListar();
+</script>
+</body>
+</html>
