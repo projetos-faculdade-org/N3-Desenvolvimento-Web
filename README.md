@@ -1,7 +1,8 @@
 # Sistema de Gerenciamento de Oficina Mecânica
 
 
-
+Executar projeto
+- necessário docker instalado na máquina
 ## Resumo rápido
 
 ```bash
