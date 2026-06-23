@@ -1,9 +1,8 @@
 # Sistema de Gerenciamento de Oficina Mecânica
 
-
-Executar projeto
-- necessário docker instalado na máquina
-## Resumo rápido
+# Resumo rápido
+### Executar projeto
+- Necessário docker instalado na máquina
 
 ```bash
 # Tudo em Docker (app + PostgreSQL + Prometheus + Grafana)
