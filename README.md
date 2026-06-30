@@ -91,7 +91,6 @@ Excluir/editar clientes e ordens é feito pelas telas ou pela API.
 ### Modo recomendado — tudo em Docker (1 comando)
 
 ```bash
-cd oficina-mecanica
 make prod-up
 ```
 
@@ -109,7 +108,6 @@ Para derrubar tudo: `make prod-down`.
 ### Modo desenvolvimento — app no host, infra em Docker
 
 ```bash
-cd oficina-mecanica
 make dev-local-up   # sobe PostgreSQL + Prometheus + Grafana em Docker
 make dev            # roda a aplicação localmente (./mvnw spring-boot:run)
 ```
@@ -187,7 +185,7 @@ preciso configurar nada manualmente.
 - **Infra:** Docker Compose (app, postgres, prometheus, grafana) + Makefile.
 
 ```
-oficina-mecanica/
+N3-Desenvolvimento-Web/
 ├── src/main/java/com/oficina/
 │   ├── controller/   # REST Controllers
 │   ├── service/      # Regras de negócio
