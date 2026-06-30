@@ -1,11 +1,18 @@
 # Sistema de Gerenciamento de Oficina Mecânica
 
+> **Antes de começar:**
+> - O **Docker Desktop precisa estar aberto e em execução** na máquina (todos os comandos sobem containers).
+> - **Copie o arquivo de ambiente:** `cp .env.example .env`. Ele **já vem preenchido com todos os valores prontos** para o projeto funcionar — não é preciso alterar nada.
+
 # Resumo rápido
 ### Executar projeto
-- Necessário docker instalado na máquina
+- Docker instalado **e aberto/rodando** na máquina
 
 ```bash
-# Tudo em Docker (app + PostgreSQL + Prometheus + Grafana)
+# 1. Copie as variáveis de ambiente (já vêm preenchidas e prontas)
+cp .env.example .env
+
+# 2. Tudo em Docker (app + PostgreSQL + Prometheus + Grafana)
 make prod-up
 
 # Ou: infra em Docker + app no host (desenvolvimento)
@@ -84,13 +91,19 @@ Excluir/editar clientes e ordens é feito pelas telas ou pela API.
 
 | Ferramenta | Versão |
 |------------|--------|
-| Docker + Docker Compose | recente (v2) |
+| Docker + Docker Compose | recente (v2) — **precisa estar aberto/rodando** |
 | Make | opcional, mas recomendado |
 | Java JDK | 21 *(somente para o modo de desenvolvimento local)* |
+
+> **Passo obrigatório antes de tudo:** copie o arquivo de variáveis de ambiente. Ele já vem preenchido e pronto para uso:
+> ```bash
+> cp .env.example .env
+> ```
 
 ### Modo recomendado — tudo em Docker (1 comando)
 
 ```bash
+cp .env.example .env   # se ainda não copiou
 make prod-up
 ```
 
@@ -108,6 +121,7 @@ Para derrubar tudo: `make prod-down`.
 ### Modo desenvolvimento — app no host, infra em Docker
 
 ```bash
+cp .env.example .env   # se ainda não copiou
 make dev-local-up   # sobe PostgreSQL + Prometheus + Grafana em Docker
 make dev            # roda a aplicação localmente (./mvnw spring-boot:run)
 ```
